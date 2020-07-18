@@ -40,6 +40,31 @@ export default class Versioning {
   }
 
   /**
+   * The commit SHA that triggered the workflow run.
+   */
+  static get sha() {
+    return process.env.GITHUB_SHA;
+  }
+
+  /**
+   * Maximum number of lines to print when logging the git diff
+   */
+  static get maxDiffLines() {
+    return 60;
+  }
+
+  /**
+   * Log up to maxDiffLines of the git diff.
+   */
+  static async logDiff() {
+    const diffCommand = `git --no-pager diff | head -n ${this.maxDiffLines.toString()}`;
+    await System.run('sh', undefined, {
+      input: Buffer.from(diffCommand),
+      silent: true,
+    });
+  }
+
+  /**
    * Regex to parse version description into separate fields
    */
   static get descriptionRegex() {
@@ -87,6 +112,8 @@ export default class Versioning {
    */
   static async generateSemanticVersion() {
     await this.fetch();
+
+    await this.logDiff();
 
     if ((await this.isDirty()) && !this.isDirtyAllowed) {
       throw new Error('Branch is dirty. Refusing to base semantic version on uncommitted changes');
@@ -162,8 +189,7 @@ export default class Versioning {
    * identifies the current commit.
    */
   static async getVersionDescription() {
-    const commitIsh = (await this.getTag()) ? 'HEAD' : `origin/${this.branch}`;
-    return this.git(['describe', '--long', '--tags', '--always', '--debug', commitIsh]);
+    return this.git(['describe', '--long', '--tags', '--always', '--debug', this.sha]);
   }
 
   /**
@@ -202,11 +228,7 @@ export default class Versioning {
    * Note: HEAD should not be used, as it may be detached, resulting in an additional count.
    */
   static async getTotalNumberOfCommits() {
-    const numberOfCommitsAsString = await this.git([
-      'rev-list',
-      '--count',
-      `origin/${this.branch}`,
-    ]);
+    const numberOfCommitsAsString = await this.git(['rev-list', '--count', this.sha]);
 
     return Number.parseInt(numberOfCommitsAsString, 10);
   }

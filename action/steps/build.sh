@@ -63,6 +63,16 @@ else
 fi
 
 #
+# Create Android keystore, if needed
+#
+if [[ -z $ANDROID_KEYSTORE_NAME || -z $ANDROID_KEYSTORE_BASE64 ]]; then
+  echo "Not creating Android keystore."
+else
+  echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_NAME"
+  echo "Created Android keystore."
+fi
+
+#
 # Display custom parameters
 #
 echo "Using custom parameters $CUSTOM_PARAMETERS."
@@ -109,8 +119,12 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -customBuildTarget "$BUILD_TARGET" \
     -customBuildPath "$CUSTOM_BUILD_PATH" \
     -executeMethod "$BUILD_METHOD" \
-    -versioning "$VERSIONING" \
     -version "$VERSION" \
+    -androidVersionCode "$ANDROID_VERSION_CODE" \
+    -androidKeystoreName "$ANDROID_KEYSTORE_NAME" \
+    -androidKeystorePass "$ANDROID_KEYSTORE_PASS" \
+    -androidKeyaliasName "$ANDROID_KEYALIAS_NAME" \
+    -androidKeyaliasPass "$ANDROID_KEYALIAS_PASS" \
     $CUSTOM_PARAMETERS
 
 # Catch exit code
@@ -121,6 +135,13 @@ if [ $BUILD_EXIT_CODE -eq 0 ]; then
   echo "Build succeeded";
 else
   echo "Build failed, with exit code $BUILD_EXIT_CODE";
+fi
+
+# Add permissions to make app runnable
+if [[ "$BUILD_TARGET" == "StandaloneOSX" ]]; then
+  ADD_PERMISSIONS_PATH=$BUILD_PATH_FULL/StandaloneOSX.app/Contents/MacOS/*
+  echo "Making the following path executable: $ADD_PERMISSIONS_PATH"
+  chmod +x $ADD_PERMISSIONS_PATH
 fi
 
 #

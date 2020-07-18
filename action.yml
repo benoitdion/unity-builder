@@ -26,6 +26,60 @@ inputs:
     required: false
     default: ''
     description: 'Path to a Namespace.Class.StaticMethod to run to perform the build.'
+  versioning:
+    required: false
+    default: 'Semantic'
+    description: 'The versioning scheme to use when building the project'
+  version:
+    required: false
+    default: ''
+    description: 'The version, when used with the "Custom" versioning scheme'
+  androidVersionCode:
+    required: false
+    default: ''
+    description: 'The android versionCode'
+  androidAppBundle:
+    required: false
+    default: false
+    description: 'Whether to build .aab instead of .apk'
+  androidKeystoreName:
+    required: false
+    default: ''
+    description: 'The android keystoreName'
+  androidKeystoreBase64:
+    required: false
+    default: ''
+    description: 'The base64 contents of the android keystore file'
+  androidKeystorePass:
+    required: false
+    default: ''
+    description: 'The android keystorePass'
+  androidKeyaliasName:
+    required: false
+    default: ''
+    description: 'The android keyaliasName'
+  androidKeyaliasPass:
+    required: false
+    default: ''
+    description: 'The android keyaliasPass'
+  customParameters:
+    required: false
+    default: ''
+    description: >
+      Custom parameters to configure the build.
+
+      Parameters must start with a hyphen (-) and may be followed by a value (without hyphen).
+      Parameters without a value will be considered booleans (with a value of true).
+  allowDirtyBuild:
+    required: false
+    default: ''
+    description: >
+      Allows the branch of the build to be dirty, and still generate the build.
+
+      Note that it is generally bad practice to modify your branch
+      in a CI Pipeline. However there are exceptions where this might
+      be needed. (use with care).
+
 outputs: {}
 branding:
   icon: 'box'

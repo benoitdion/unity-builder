@@ -100,6 +100,28 @@ describe('Versioning', () => {
     });
   });
 
+  describe('logging git diff', () => {
+    it('calls git diff', async () => {
+      // allowDirtyBuild: true
+      jest.spyOn(core, 'getInput').mockReturnValue('true');
+      jest.spyOn(Versioning, 'isDirty').mockResolvedValue(false);
+      jest.spyOn(Versioning, 'fetch').mockResolvedValue(undefined);
+      jest.spyOn(Versioning, 'hasAnyVersionTags').mockResolvedValue(true);
+      jest
+        .spyOn(Versioning, 'parseSemanticVersion')
+        .mockResolvedValue({ tag: 'mocktag', commits: 'abcdef', hash: '75822BCAF' });
+      const logDiffSpy = jest.spyOn(Versioning, 'logDiff');
+      const gitSpy = jest.spyOn(System, 'run').mockResolvedValue({});
+
+      await Versioning.generateSemanticVersion();
+
+      expect(logDiffSpy).toHaveBeenCalledTimes(1);
+      expect(gitSpy).toHaveBeenCalledTimes(1);
+      const issuedCommand = System.run.mock.calls[0][2].input.toString();
+      expect(issuedCommand.indexOf('diff')).toBeGreaterThan(-1);
+    });
+  });
+
   describe('descriptionRegex', () => {
     it('is a valid regex', () => {
       expect(Versioning.descriptionRegex).toBeInstanceOf(RegExp);

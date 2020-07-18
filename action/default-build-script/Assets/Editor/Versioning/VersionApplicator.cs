@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using UnityEditor;
 
 namespace UnityBuilderAction.Versioning
@@ -11,13 +10,18 @@ namespace UnityBuilderAction.Versioning
       if (version == "none") {
         return;
       }
-      
+
       Apply(version);
+    }
+
+    public static void SetAndroidVersionCode(string androidVersionCode) {
+      PlayerSettings.Android.bundleVersionCode = Int32.Parse(androidVersionCode);
     }
 
     static void Apply(string version)
     {
       PlayerSettings.bundleVersion = version;
+      PlayerSettings.macOS.buildNumber = version;
     }
   }
 }

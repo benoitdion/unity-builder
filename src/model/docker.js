@@ -28,6 +28,12 @@ class Docker {
       buildFile,
       buildMethod,
       buildVersion,
+      androidVersionCode,
+      androidKeystoreName,
+      androidKeystoreBase64,
+      androidKeystorePass,
+      androidKeyaliasName,
+      androidKeyaliasPass,
       customParameters,
     } = parameters;
 
@@ -47,6 +53,12 @@ class Docker {
         --env BUILD_FILE="${buildFile}" \
         --env BUILD_METHOD="${buildMethod}" \
         --env VERSION="${buildVersion}" \
+        --env ANDROID_VERSION_CODE="${androidVersionCode}" \
+        --env ANDROID_KEYSTORE_NAME="${androidKeystoreName}" \
+        --env ANDROID_KEYSTORE_BASE64="${androidKeystoreBase64}" \
+        --env ANDROID_KEYSTORE_PASS="${androidKeystorePass}" \
+        --env ANDROID_KEYALIAS_NAME="${androidKeyaliasName}" \
+        --env ANDROID_KEYALIAS_PASS="${androidKeyaliasPass}" \
         --env CUSTOM_PARAMETERS="${customParameters}" \
         --env HOME=/github/home \
         --env GITHUB_REF \

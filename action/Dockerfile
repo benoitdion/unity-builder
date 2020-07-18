@@ -1,5 +1,5 @@
 ARG IMAGE
-FROM $IMAGE
+FROM registry.gitlab.com/szymonkaz/unity3d:2019.3.12f1-android-szymon-kaz-fixfailingandroidgithubactions
 
 LABEL "com.github.actions.name"="Unity - Builder"
 LABEL "com.github.actions.description"="Build Unity projects for different platforms."

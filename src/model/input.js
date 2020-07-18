@@ -41,6 +41,36 @@ class Input {
     return core.getInput('version') || '';
   }
 
+  static get androidVersionCode() {
+    return core.getInput('androidVersionCode');
+  }
+
+  static get androidAppBundle() {
+    const input = core.getInput('androidAppBundle') || 'false';
+
+    return input === 'true' ? 'true' : 'false';
+  }
+
+  static get androidKeystoreName() {
+    return core.getInput('androidKeystoreName') || '';
+  }
+
+  static get androidKeystoreBase64() {
+    return core.getInput('androidKeystoreBase64') || '';
+  }
+
+  static get androidKeystorePass() {
+    return core.getInput('androidKeystorePass') || '';
+  }
+
+  static get androidKeyaliasName() {
+    return core.getInput('androidKeyaliasName') || '';
+  }
+
+  static get androidKeyaliasPass() {
+    return core.getInput('androidKeyaliasPass') || '';
+  }
+
   static get allowDirtyBuild() {
     const input = core.getInput('allowDirtyBuild') || 'false';
 
